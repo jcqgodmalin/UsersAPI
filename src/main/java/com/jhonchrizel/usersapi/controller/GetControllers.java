@@ -19,7 +19,7 @@ import com.jhonchrizel.usersapi.services.PersonService;
 import com.jhonchrizel.usersapi.services.UserService;
 
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1")
 public class GetControllers {
 	
 	@Autowired
@@ -27,6 +27,13 @@ public class GetControllers {
 	@Autowired
 	private PersonService personService;
 	
+
+	@GetMapping("/")
+	public String home(){
+		return "Hello World";
+	}
+
+
 	@GetMapping("/users")
 	public List<Person> getUsers() {
 		try {

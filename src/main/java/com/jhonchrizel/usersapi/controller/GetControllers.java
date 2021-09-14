@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,15 +27,28 @@ public class GetControllers {
 	private UserService userService;
 	@Autowired
 	private PersonService personService;
-	
 
 	@GetMapping("/")
 	public String home(){
 		return "Hello World";
 	}
 
-
 	@GetMapping("/users")
+	public List<User> getUsersWithCredentials(@RequestParam(value = "pkey", required = false) String pkey){
+		String privateKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcI";
+
+		if(pkey.contentEquals(privateKey)){
+			try {
+				return userService.getAllUsers();
+			}catch(UsersApiException e){
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+			}
+		}else{
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sorry, you are not allowed to get the users with credentials list");
+		}
+	}
+
+	@GetMapping("/persons")
 	public List<Person> getUsers() {
 		try {
 			return personService.getAllPersons();
